@@ -99,7 +99,7 @@ public class Item {
 }
 ```
 
-#### `ComparaNome.java`
+#### `ComparaNome`
 ```java
 import java.util.Comparator;
 
@@ -169,7 +169,7 @@ Garantire che tutti i componenti base contengano campi, costruttori, getter/sett
 - Correggere e uniformare il calcolo di dimensione record in `Cliente.java` e `Pizza.java` (gestione stringhe a lunghezza fissa con padding/troncamento a 20 caratteri).
 - Implementare i metodi di lettura e scrittura su `RandomAccessFile` (o metodi helper di conversione byte/record) per `Data`, `Cliente` e `Pizza`.
 - Completare `Item.java` con costruttori, getter/setter per chiave (`key`) e puntatore (`posizione`/offset nel file).
-- Aggiornare `ComparaNome.java` per implementare `Comparator<Item>` e consentire l'ordinamento alfabetico dell'indice per nome cliente.
+- Aggiornare `ComparaNome` per implementare `Comparator<Item>` e consentire l'ordinamento alfabetico dell'indice per nome cliente.
 
 ###   Step 2: Completamento della classe Ordine e gestione serializzazione record fisso
 Completare la logica interna dell'ordine, il calcolo della dimensione totale del record `DIM_ORDINE` e le funzioni di I/O binario.

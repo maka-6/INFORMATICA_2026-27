@@ -8,7 +8,10 @@
 
 import java.util.Comparator;
 
-class ComparaNome implements Comparator<String> {
-	
-	
+class ComparaNome implements Comparator<Item> {
+
+    @Override
+    public int compare(Item a, Item b) {
+        return a.getKey().compareToIgnoreCase(b.getKey());
+    }
 }

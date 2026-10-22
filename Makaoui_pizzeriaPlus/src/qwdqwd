@@ -1,0 +1,104 @@
+
+
+File Di Esercitazione
+
+public void scriviStringa(RandomAccessFile archivio, int lenght, String nome) throws IOException {
+    StringBuilder sb = new StrinBuilder(nome);
+    sb.setLenght(lenght);
+    archivio.writeBytes(sb.toString());
+}
+
+public String leggiStringa(RandomAccessFile archivio, int lenght) throws IOException {
+    byte[] b = new Byte[];
+    b.fullyRead(archivio);
+    return new String(b).trim();
+}
+
+public void salvaOrdine(Ordine o) {
+    try {
+        int pos = (int) (archivio.length() / Ordine.getByteDIM());   // prossimo record libero
+        archivio.seek((long) pos * Ordine.getByteDIM());
+        o.scriviRecord(archivio);
+        indice.aggiungi(o.getCliente().getNome(), pos);
+    } catch (IOException e) {
+        System.out.println("Errore di scrittura");
+    }
+}
+
+public void salvaOrdine(Ordine o) throws IOException {
+    try {
+        int pos = (int) (archivio.length() / Ordine.getByteDIM());   // prossimo record libero
+        archivio.seek((long) pos * Ordine.getByteDIM());
+        o.scriviRecord(archivio);
+        indice.aggiungi(o.getCliente().getNome(), pos);
+    } catch (IOException e) {
+        System.out.println("Errore di scrittura");
+    }
+    System.out.println(archivio.length());
+}
+
+public Ordine cercaOrdine(String nome) {
+    int pos = indice.cerca(nome);
+    if (pos == -1) return null;
+    try {
+        archivio.seek((long) pos * Ordine.getByteDIM());
+        return Ordine.leggiRecord(archivio);
+    } catch (IOException e) {
+        System.out.println("Errore di lettura");
+        return null;
+    }
+}
+
+private void ricostruisciIndice() {
+    try {
+        int n = (int) (archivio.length() / Ordine.getByteDIM());
+        for (int i = 0; i < n; i++) {
+            archivio.seek((long) i * Ordine.getByteDIM());
+            Ordine o = Ordine.leggiRecord(archivio);
+            indice.aggiungi(o.getCliente().getNome(), i);
+        }
+    } catch (IOException e) {
+        System.out.println("Errore di lettura");
+    }
+}
+
+public void chiudi() {
+    try { archivio.close(); } catch (IOException e) { }
+}
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+class IndexTable {
+    private ArrayList<Item> indice = new ArrayList<>();
+    private ComparaNome comp = new ComparaNome();
+
+    void aggiungi(String key, int pos) {
+        indice.add(new Item(key, pos));
+        Collections.sort(indice, comp);              // l'indice resta sempre ordinato
+    }
+
+    int cerca(String key) {                          // posizione nel file, -1 se assente
+        int i = Collections.binarySearch(indice, new Item(key, 0), comp);
+        return i >= 0 ? indice.get(i).getPosizione() : -1;
+    }
+}
+
+class Item {
+	private String key;
+	private int posizione;
+
+	Item(String s, int pos){
+		key = s;
+		posizione = pos;
+	}
+
+	public String getKey(){
+		return key;
+	}
+
+	public int getPosizione(){
+		return posizione;
+	}
+
+}

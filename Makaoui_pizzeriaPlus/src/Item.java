@@ -9,8 +9,17 @@ class Item {
 	private String key;
 	private int posizione;
 	
-	Item(String s){
+	Item(String s, int pos){
 		key = s;
-		posizione = 0;
+		posizione = pos;
 	}
+
+	public String getKey(){
+		return key;
+	}
+
+	public int getPosizione(){
+		return posizione;
+	}
+
 }

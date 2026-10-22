@@ -5,27 +5,33 @@
 	Oggetto:
 */
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 class Cliente{
 	
 	private String nome;
-	private boolean ritiraDopo; // flag che indica se il cliente ritira il suo ordine subito o prenota per un orario preciso
-	private Data ritiro;
+	private Data ritiro; // se la data equivale a (-1;-1) il cliente ritira subito
 	private int numOrdine;
 	
 	private static final int MAX_DIM = 20;
-	private static int CLIENTE_DIM = MAX_DIM + Data.getByteDIM() + 4 + 1;
+	private static int CLIENTE_DIM = (MAX_DIM) + Data.getByteDIM() + 4;
 	
 	public Cliente (){
 		nome = "mario";
-		ritiro = null;
+		ritiro = new Data();
 		numOrdine = 1;
-		ritiraDopo = false;
 	}
 
-	public Cliente (String nome, Data ritiro, boolean ritiraDopo, int numOrdine){
+	public Cliente (String nome, Data ritiro, int numOrdine){
 		this.nome = nome;
 		this.ritiro = ritiro;
-		this.ritiraDopo = ritiraDopo;
+		this.numOrdine = numOrdine;
+	}
+
+	public Cliente (String nome, int numOrdine){
+		this.nome = nome;
+		this.ritiro = new Data();
 		this.numOrdine = numOrdine;
 	}
 
@@ -44,9 +50,22 @@ class Cliente{
 	public static int getByteDIM(){
 		return CLIENTE_DIM;
 	}
+
+	public void scrivi(RandomAccessFile archivio) throws IOException {
+		Pizzeria.scriviStringa(archivio, nome, MAX_DIM);
+		Data.salva(archivio, ritiro);
+		archivio.writeInt(numOrdine);
+	}
+
+	public static Cliente leggi(RandomAccessFile archivio) throws IOException{
+		String nome = Pizzeria.leggiStringa(archivio, MAX_DIM);
+		Data ritiro = Data.leggi(archivio);
+		int numOrdine = archivio.readInt();
+		return new Cliente(nome, ritiro, numOrdine);
+	}
 	
 	@Override
 	public String toString(){
-		return "Cliente: " + nome + " Ritira" + (ritiraDopo ? " subito" : " alle ore: " + ritiro.toString());
+		return "Cliente: " + nome + " Ritira" + (ritiro.getHour() == -1 ? " subito" : " alle ore: " + ritiro.toString());
 	}
 }

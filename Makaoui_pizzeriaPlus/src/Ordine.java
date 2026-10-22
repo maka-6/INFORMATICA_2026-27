@@ -5,6 +5,9 @@
 	Oggetto:
 */
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 class Ordine {
 	
 	private Pizza[] pizzeOrd = new Pizza[5]; // la pizzeria ha solo 5 tipi di pizze ordinabili, ogni slot ha la sua pizza predefinita
@@ -13,23 +16,32 @@ class Ordine {
 	private int numOrdine = 1;
 	private float total;
 	private boolean consegnato;
-	
-	private static final int MAX_NOME = 20;
-	private static final int DIM_ORDINE = (Pizza.getByteDIM() * 5) + 1 + Cliente.getByteDIM() + 4 + 8 + 1;
+
+	private static final int DIM_ORDINE = (Pizza.getByteDIM() * 5) + 1 + Cliente.getByteDIM() + 4 + 4 + 1; // Unica Dimensione non statica
 	
 	public Ordine () {
 		pizzeOrd[0] = new Pizza();
 		total = pizzeOrd[0].getPrice();
+		// popolo array di pizze vuote
+		for(int i = 1; i < 5; i++){
+			pizzeOrd[i] = new Pizza();
+		}
 		pronto = true;
 		cliente = new Cliente();
 		consegnato = false;
+		pronto = false;
+		total = calcolaTotale();
 	}
 	
 	public Ordine(Pizza[] pizzeOrd, boolean pronto, float total, Cliente cliente, int numOrdine, boolean consegnato){
 		this.pizzeOrd = pizzeOrd;
+		for (int i = 0; i < 5; i++)
+			if (this.pizzeOrd[i] == null)
+				this.pizzeOrd[i] = new Pizza("", 0f, 0, false, new Data());   // pizza "vuota": quantita 0
 		this.pronto = pronto;
 		this.total = total;
 		this.numOrdine = numOrdine;
+		this.cliente = cliente;
 		this.consegnato = consegnato;
 	}
 	
@@ -60,8 +72,34 @@ class Ordine {
 		return cliente;
 	}
 	
-	public int getByteDIM(){
+	public static int getByteDIM(){
 		return DIM_ORDINE;
+	}
+
+	void scriviRecord(RandomAccessFile f) throws IOException {
+		for (int i = 0; i < 5; i++) {
+
+			pizzeOrd[i].scrivi(f);
+
+		}
+		f.writeBoolean(pronto);
+		cliente.scrivi(f);
+		f.writeInt(numOrdine);
+		f.writeFloat(total);
+		f.writeBoolean(consegnato);
+	}
+
+	static Ordine leggiRecord(RandomAccessFile f) throws IOException {
+		Pizza[] p = new Pizza[5];
+		for (int i = 0; i < 5; i++) {
+			p[i] = Pizza.leggi(f);
+		}
+		boolean pronto = f.readBoolean();
+		Cliente c = Cliente.leggi(f);
+		int num = f.readInt();
+		float tot = f.readFloat();
+		boolean cons = f.readBoolean();
+		return new Ordine(p, pronto, tot, c, num, cons);
 	}
 	
 	@Override

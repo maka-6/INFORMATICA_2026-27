@@ -13,6 +13,8 @@ class Pizzeria {
 	private Data orario;
 	private RandomAccessFile archivio; // aperto una volta sola
 	private IndexTable indice = new IndexTable();
+	
+	private IndexHash index;
 
 	public Pizzeria(){
 		nome = "Sopranos's Pizza";
@@ -21,10 +23,12 @@ class Pizzeria {
 		ordini[0] = tempOrd;
 		try {
 			archivio = new RandomAccessFile("ordini.bin", "rw");
+			index = new IndexHash();
 		} catch (IOException e) {
 			System.out.println("Errore");
 		}
 		ricostruisciIndice();
+		
 	}
 	
 	public Pizzeria(String nome, Ordine[] ordini, Data orario, RandomAccessFile archivio){
@@ -52,6 +56,7 @@ class Pizzeria {
 			archivio.seek((long) pos * Ordine.getByteDIM());
 			o.scriviRecord(archivio);
 			indice.aggiungi(o.getCliente().getNome(), pos);
+			
 		} catch (IOException e) {
 			System.out.println("Errore di scrittura");
 		}

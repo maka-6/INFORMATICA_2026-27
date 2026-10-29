@@ -5,7 +5,7 @@
 	Oggetto:
 */
 
-class Item {
+class Item{
 	private String key;
 	private int posizione;
 	

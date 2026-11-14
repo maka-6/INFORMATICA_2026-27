@@ -14,7 +14,7 @@ class Cliente{
 	private Data ritiro; // se la data equivale a (-1;-1) il cliente ritira subito
 	private int numOrdine;
 	
-	private static final int MAX_DIM = 20;
+	public static final int MAX_DIM = 20;
 	private static int CLIENTE_DIM = (MAX_DIM) + Data.getByteDIM() + 4;
 	
 	public Cliente (){

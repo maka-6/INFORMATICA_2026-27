@@ -9,4 +9,5 @@
 	$file = "usersDB.csv";
 	$archive = [];
 	$db = fopen($file,"w") or die("Error");
+
 ?>

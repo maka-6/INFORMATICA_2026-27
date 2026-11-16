@@ -2,19 +2,34 @@
  * Autore: Youness Makaoui
  * Data: 12/11/2026
  * Classe: 5G
- * Descrizione:
+ * Descrizione: Form di accesso
 -->
 <!DOCTYPE html>
 
 <html>
 	<head>
-		<title>Bentoranto accedi</title>
+		<link rel="stylesheet" href="css/style.css">
+		<title>Benvenuto accedi</title>
 	</head>
 	<body>
 		<header>
 			<h1> Accedi </h1>
 		</header>
 		<main>
+			<form method="POST" action="php/main.php">
+				<!-- campo nascosto: dice a main.php che cosa fare -->
+				<input type="hidden" name="azione" value="login">
+
+				<label>Username:</label><br>
+				<input type="text" name="username" required><br><br>
+
+				<label>Password:</label><br>
+				<input type="password" name="password" required><br><br>
+
+				<input type="submit" value="Accedi">
+			</form>
+			<p>Non hai un account? <a href="singUp.html">Registrati</a></p>
+			<p><a href="index.html">Torna alla home</a></p>
 		</main>
 	</body>
 </html>
